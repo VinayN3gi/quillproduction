@@ -13,7 +13,6 @@ const page = async () => {
 
   return (
     <>
-    <div>{user.email}</div>
     <Dashboard/>
     </>
   )

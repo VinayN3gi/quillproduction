@@ -1,13 +1,14 @@
-'use client'
+
 import React from 'react'
 import { trpc } from '../_trpc/client'
 
-const Dashboard = () => {
-    const {data,isLoading}=trpc.authCallback.useQuery()
-    if(!data) return <div>Loading...</div>
+const Dashboard = async () => {
 
+    
     return (
-    <div>{data}</div>
+      <div>
+        Query Succesfull 
+      </div>
   )
 }
 
