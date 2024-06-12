@@ -1,8 +1,8 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { trpc } from '../_trpc/client'
 import UploadButton from './UploadButton'
-import { Ghost, MessageSquare, Plus, Trash } from 'lucide-react'
+import { Ghost, Loader2, MessageSquare, Plus, Trash } from 'lucide-react'
 import Skeleton from 'react-loading-skeleton'
 import Link from 'next/link'
 import {format} from 'date-fns'
@@ -10,8 +10,24 @@ import { Button } from '@/components/ui/button'
 
 
 const Dashboard = () => {
+  const [selectedFile,setSelectedFile]=useState<string | null>(null)
+  const utils=trpc.useUtils()
   const {data:files,isLoading}=trpc.getUserFiles.useQuery()
-    
+  const {mutate:deleteFile}=trpc.deleteFile.useMutation(
+    {
+      onSuccess:()=>{
+        utils.getUserFiles.invalidate()
+      },
+      onMutate:({id})=>{
+        setSelectedFile(id)
+      },
+      onSettled:()=>{
+        setSelectedFile(null)
+      }
+    }
+  )   
+
+
     return (
      <main className='mx-auto max-w-7xl md:p-10 '>
         <div className=' mt-8 flex flex-col justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'>
@@ -51,8 +67,16 @@ const Dashboard = () => {
                           <MessageSquare className=' h-4 w-4'/>
                             MOCKED
                           </div>
-                          <Button size="sm" className='w-full bg-red-500/90  hover:bg-red-700'>
-                              <Trash className=' h-4 w-4'/>
+                          <Button 
+                          onClick={()=>deleteFile({id:files.id})}
+                          size="sm" className='w-full bg-red-500/90  hover:bg-red-700'>
+                              {selectedFile===files.id ? 
+                              (
+                                <Loader2 className=' h-4 w-4 animate-spin'/>
+                                
+                              )
+                              :
+                              (<Trash className=' h-4 w-4'/>)}
                           </Button>
                      </div>
                   </li>
@@ -74,10 +98,6 @@ const Dashboard = () => {
                 </h3>
                   <p>Upload a file to start chatting with your pdf</p>
               </div>
-
-
-
-
             )
           }
      </main>
