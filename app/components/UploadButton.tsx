@@ -1,8 +1,10 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { DialogContent ,Dialog,DialogTrigger} from '@/components/ui/dialog'
-
+import Dropzone from 'react-dropzone'
 import React, { useState } from 'react'
+import UploadDropzone from './UploadDropzone'
+
 
 
 const UploadButton = () => {
@@ -19,8 +21,10 @@ const UploadButton = () => {
         </Button>
     </DialogTrigger>
     <DialogContent>
-        example content
+        <UploadDropzone/>
     </DialogContent>   
+    
+    
     </Dialog>
   )
 }
