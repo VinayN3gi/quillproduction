@@ -3,7 +3,9 @@ import React from 'react'
 import Messages from './Messages'
 import ChatInput from './ChatInput'
 import { trpc } from '../_trpc/client'
-import { Loader2 } from 'lucide-react'
+import { ChevronLeft, Loader2, XCircle } from 'lucide-react'
+import Link from 'next/link'
+import { buttonVariants } from '@/components/ui/button'
 
 
 interface ChatWrapperProps {
@@ -40,6 +42,8 @@ const ChatWrapper = ({fileId}:ChatWrapperProps) => {
         <ChatInput isDisabled={true}/>
       </div>
     )
+
+
     if (data?.status === 'PROCESSING')
       return (
         <div className='relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2'>
@@ -58,7 +62,36 @@ const ChatWrapper = ({fileId}:ChatWrapperProps) => {
           <ChatInput isDisabled={true}/>
         </div>
       )
-  
+
+
+      
+      if (data?.status === 'FAILED')
+        return (
+          <div className='relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2'>
+            <div className='flex-1 flex justify-center items-center flex-col mb-28'>
+              <div className='flex flex-col items-center gap-2'>
+                <XCircle className='h-8 w-8 text-red-500 ' />
+                <h3 className='font-semibold text-xl'>
+                  To many pages in pdf 
+                </h3>
+                <p className='text-zinc-500 text-sm'>
+                  Your <span className=' font-medium'>Free</span> 
+                  {" "}
+                  plan only supports upto 5 pages in a PDF.
+                 </p>              
+               <Link href="/dashboard" className={buttonVariants({
+                  variant:'secondary',
+                  className:"mt-4 hover:bg-zinc-400/50 "
+               })}>
+                  <ChevronLeft className=' h-4 w-4 mr-1.5'/>
+                  Back to dashboard
+               </Link>
+              </div>
+            </div>
+    
+            <ChatInput isDisabled={true}/>
+          </div>
+        )
 
 
   return (
